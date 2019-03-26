@@ -1,5 +1,14 @@
-# Set Mac address of your device here!
-device_mac="12-34-56-78-90-12"
+device_mac="12-34-56-78-90-10"
+logfile="/tmp/watchlock"
+
+# Be sure we don't run second instance
+file_recently_touched=$(find /tmp/watchlock -mmin -1 -print)
+if [ ! -z "$file_recently_touched" ]
+then
+	echo "Seems like there is another instance running. Exiting"
+	exit
+fi
+
 {
 locked="NO"
 while true
