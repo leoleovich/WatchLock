@@ -20,5 +20,7 @@ do
 		echo "BT device is visible"
 		locked="NO"
 	fi
+	# Avoid CPU crashing loop
+	sleep 1
 done
-} >> /tmp/btlock
+} >> /tmp/watchlock
