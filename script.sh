@@ -17,9 +17,13 @@ locked="NO"
 while true
 do
 	date
-	visible=$(/usr/local/bin/blueutil --connect $device_mac || echo NO)
-	if [ "$visible" == "NO" ]
+	connected=$(/usr/local/bin/blueutil --is-connected $device_mac)
+    if [ "$connected" == "1" ] || /usr/local/bin/blueutil --connect $device_mac
 	then
+		echo "BT device is visible. Was connected: $connected"
+		locked="NO"
+		sleep $check_interval
+	else
 		echo "BT device disappeared"
 		if [ "$locked" == "NO" ]
 		then
@@ -27,12 +31,8 @@ do
 			locked="YES"
 			/System/Library/CoreServices/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine
 		fi
-	else
-		echo "BT device is visible"
-		locked="NO"
-		sleep $check_interval
 	fi
-	# Avoid CPU crashing loop
-	sleep 0.1
+	# Retry
+	sleep $check_interval
 done
 } >> $logfile
